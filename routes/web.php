@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\UserController;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,23 +18,15 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::get('/', function () {
-   return view('eventform');
-});
+Route::get('/',[EventController::class, 'index']);
 
-Route::post('/', function(Request $request){
-    $path = $request->file('event_picture')->store('public/img','public');
-    // echo $path;
-        $event = new Event();
-        $event->event_name = $request->event_name;
-        $event->description = $request->event_desc;
-        $event->event_date = $request->event_date;
-        $event->picture = 'storage/'.$path;
-        $event->save();
-        return view('eventform',["event"=>$event]);
-});
+Route::post('/',[EventController::class,'store']);
 
-Route::get('/events', function(){
-    $events = Event::all();
-    return view('events',["events"=>$events]);
-});
+Route::get('events',[EventController::class, 'all']);
+
+Route::get('register',[UserController::class, 'createRegister']);
+Route::get('login',[UserController::class, 'createLogin']);
+
+Route::post('register',[UserController::class, 'register']);
+Route::post('login',[UserController::class, 'login']);
+Route::get('logout',[UserController::class, 'logout']);
